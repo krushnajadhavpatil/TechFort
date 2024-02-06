@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.techfort">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/applogo2"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/applogo2"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.FullScreen">
+        <activity android:name=".Activity.ProgQuizActivity"/>
+        <activity android:name=".Activity.TopicQuizResult" />
+        <activity android:name=".Activity.InterviewTopicActivity" />
+        <activity android:name=".Activity.InterviewContent" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
+        <activity android:name=".Activity.BookmarkActivity" />
+        <activity android:name=".Activity.NewPostActivity" />
+        <activity android:name=".Activity.CommentActivity" />
+        <activity android:name=".Activity.DiscussActivity" />
+        <activity android:name=".Activity.SetupActivity" />
+        <activity android:name=".Activity.RegisterActivity" />
+        <activity android:name=".Activity.LoginActivity" />
+        <activity android:name=".Activity.WebDevTopicActivity" />
+        <activity android:name=".Activity.StartQuizActivity" />
+        <activity android:name=".Activity.ProgTopicActivity" />
+        <activity android:name=".Activity.ProgContentActivity" />
+        <activity android:name=".Activity.CourseMaterial" />
+        <activity android:name=".Activity.PdfViewer" />
+        <activity android:name=".Activity.Compiler" />
+        <activity android:name=".Activity.WebDevActivity" />
+        <activity android:name=".Activity.QuizActivity" />
+        <activity android:name=".Activity.Content" />
+        <activity android:name=".Activity.ResultActivity" />
+        <activity android:name=".Activity.WeeklyQuizQuestionActivity" />
+        <activity android:name=".Activity.TopicActivity" />
+        <activity android:name=".Activity.WeeklyQuizActivity" />
+        <activity android:name=".Activity.ProgrammingActivity" />
+        <activity android:name=".Activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+    </application>
+
+</manifest>

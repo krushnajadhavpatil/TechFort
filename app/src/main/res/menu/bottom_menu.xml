@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/learn"
+        android:id="@+id/bottom_learn"
+        android:title="Learn" />
+    <item
+        android:icon="@drawable/code"
+        android:id="@+id/bottom_code"
+        android:title="Code" />
+    <item
+        android:icon="@drawable/discuss"
+        android:id="@+id/bottom_discuss"
+        android:title="Discuss" />
+    <item
+        android:icon="@drawable/wquiz"
+        android:id="@+id/bottom_wq"
+        android:title="Weekly Quiz" />
+</menu>

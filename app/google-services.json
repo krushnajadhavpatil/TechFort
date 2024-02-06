@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "421988348197",
+    "project_id": "techfort-fe673",
+    "storage_bucket": "techfort-fe673.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421988348197:android:d04015fe9cdf49e490aacc",
+        "android_client_info": {
+          "package_name": "com.example.techfort"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421988348197-a42uvd323i4n7mf8i8dp256bot11urlu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDumyeEMbCB6PtXlNZcfu7b58SAeG-vo68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421988348197-a42uvd323i4n7mf8i8dp256bot11urlu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
