@@ -9,11 +9,46 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/applogo2"
-        android:label="@string/app_name"
+        android:label="Hackers Academy"
         android:roundIcon="@drawable/applogo2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.FullScreen">
-        <activity android:name=".Activity.ProgQuizActivity"/>
+        <activity
+            android:name=".Activity.ethichapter_third"
+            android:exported="false"
+            android:label="@string/title_activity_ethichapter_third"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".Activity.ethichapter_second"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ethichapter_first"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.network_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Network_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Informationsecurity_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.cyber_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.pythonhack_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.kalilinux_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.eithicalhack_course"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ethical"
+            android:exported="false" />
+        <activity android:name=".Activity.ProgQuizActivity" />
         <activity android:name=".Activity.TopicQuizResult" />
         <activity android:name=".Activity.InterviewTopicActivity" />
         <activity android:name=".Activity.InterviewContent" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->

@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.techfort.Activity.Compiler;
+import com.example.techfort.Activity.Profile;
 import com.example.techfort.Activity.CourseMaterial;
 import com.example.techfort.Activity.InterviewTopicActivity;
 import com.example.techfort.Activity.ProgrammingActivity;

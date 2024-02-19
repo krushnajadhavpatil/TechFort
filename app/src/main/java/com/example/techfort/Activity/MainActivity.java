@@ -3,6 +3,8 @@ package com.example.techfort.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,9 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 
 import com.example.techfort.Adapter.CategoryAdapter;
 import com.example.techfort.Model.CategoryModel;
@@ -42,6 +46,7 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
     BottomNavigationView mainbottomNav;
     FirebaseAuth mAuth;
     private String current_user_id;
+    CardView c1,c2,c3,c4,c5,c6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,61 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
 
+
+         c1=findViewById(R.id.e1);
+       c1.setOnClickListener(new View.OnClickListener() {
+            @Override
+           public void onClick(View view) {
+               Intent intent=new Intent(MainActivity.this, eithicalhack_course.class);
+                startActivity(intent);
+
+            }
+      });
+        c2=findViewById(R.id.k1);
+        c2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, kalilinux_course.class);
+                startActivity(intent);
+
+            }
+        });
+        c3=findViewById(R.id.p1);
+        c3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, pythonhack_course.class);
+                startActivity(intent);
+
+            }
+        });
+        c4=findViewById(R.id.cy1);
+        c4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, cyber_course.class);
+                startActivity(intent);
+
+            }
+        });
+        c5=findViewById(R.id.i1);
+        c5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, Informationsecurity_course.class);
+                startActivity(intent);
+
+            }
+        });
+        c6=findViewById(R.id.n1);
+        c6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, network_course.class);
+                startActivity(intent);
+
+            }
+        });
         //Bottom Click Listener
 
         mainbottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -72,7 +132,7 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
                         return true;
 
                     case R.id.bottom_code:
-                        Intent code = new Intent(MainActivity.this, Compiler.class);
+                        Intent code = new Intent(MainActivity.this, SetupActivity.class);
                         startActivity(code);
                         return true;
 
@@ -108,8 +168,8 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        binding.categoryList.setLayoutManager(new GridLayoutManager(this, 2));
-        binding.categoryList.setAdapter(adapter);
+//        binding.categoryList.setLayoutManager(new GridLayoutManager(this, 2));
+//        binding.categoryList.setAdapter(adapter);
 
         //Navigation
         navigationView.bringToFront();
@@ -170,6 +230,8 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
                 Intent setupIntent = new Intent(this, SetupActivity.class);
                 startActivity(setupIntent);
                 break;
+
+
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

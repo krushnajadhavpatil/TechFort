@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:fontFamily="@font/faster_one"
-        android:text="TechFort"
+        android:text="KGR TECH"
         android:textColor="#fff"
         android:textSize="45sp"
         android:textStyle="normal" />

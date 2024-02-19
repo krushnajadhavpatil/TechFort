@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.ethichapter_first">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Image View at the top -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ethichap1"
+                android:layout_width="360dp"
+                android:layout_height="80dp"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="22dp"
+                app:cardBackgroundColor="#C9A31EF4"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="14dp"
+                        android:text="1.Introdution"
+                        android:textColor="@color/black"
+                        android:textSize="40sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Defination:-"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="                   Ethical hacking, also known as penetration testing or white-hat hacking, is the practice of deliberately probing and exploiting computer systems, networks, and applications to identify vulnerabilities and weaknesses."
+                android:textSize="22dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Authorized Access:-"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Unlike malicious hacking, ethical hacking is conducted with explicit permission from the system owner or administrator. The goal is to uncover security flaws before they can be exploited by unauthorized individuals."
+                android:textSize="22sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Purpose:-"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="The primary objective of ethical hacking is to assess the security posture of an organization's digital infrastructure. By identifying vulnerabilities and weaknesses, ethical hackers help organizations strengthen their defenses against cyber threatsethical hackers help organizations strengthen their defenses against cyber threatsethical hackers help organizations strengthen their defenses against cyber threats."
+                android:textSize="22sp"
+                />
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

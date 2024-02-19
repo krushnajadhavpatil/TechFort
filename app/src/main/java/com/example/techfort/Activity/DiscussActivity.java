@@ -62,7 +62,7 @@ public class DiscussActivity extends AppCompatActivity {
         //Toolbar
         Toolbar setupToolbar = findViewById(R.id.discussToolbar);
         setSupportActionBar(setupToolbar);
-        getSupportActionBar().setTitle("Discuss");
+        getSupportActionBar().setTitle("Videos");
 
 
         if (firebaseAuth.getCurrentUser() != null) {
