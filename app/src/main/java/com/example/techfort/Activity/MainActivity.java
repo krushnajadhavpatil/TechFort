@@ -2,9 +2,9 @@ package com.example.techfort.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,22 +12,28 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-
 import com.example.techfort.Adapter.CategoryAdapter;
+import com.example.techfort.Api.AdminUid;
 import com.example.techfort.Model.CategoryModel;
 import com.example.techfort.R;
 import com.example.techfort.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,12 +47,12 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
     DrawerLayout drawerLayout;
     ActivityMainBinding binding;
     FirebaseFirestore database;
+    DatabaseReference db;
     Toolbar toolbar;
     NavigationView navigationView;
     BottomNavigationView mainbottomNav;
     FirebaseAuth mAuth;
     private String current_user_id;
-    CardView c1,c2,c3,c4,c5,c6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,63 +67,16 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
         mainbottomNav = findViewById(R.id.mainbottomNav);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
+        current_user_id =mAuth.getCurrentUser().getUid();
 
-
-         c1=findViewById(R.id.e1);
-       c1.setOnClickListener(new View.OnClickListener() {
-            @Override
-           public void onClick(View view) {
-               Intent intent=new Intent(MainActivity.this, eithicalhack_course.class);
-                startActivity(intent);
-
-            }
-      });
-        c2=findViewById(R.id.k1);
-        c2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, kalilinux_course.class);
-                startActivity(intent);
-
-            }
-        });
-        c3=findViewById(R.id.p1);
-        c3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, pythonhack_course.class);
-                startActivity(intent);
-
-            }
-        });
-        c4=findViewById(R.id.cy1);
-        c4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, cyber_course.class);
-                startActivity(intent);
-
-            }
-        });
-        c5=findViewById(R.id.i1);
-        c5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, Informationsecurity_course.class);
-                startActivity(intent);
-
-            }
-        });
-        c6=findViewById(R.id.n1);
-        c6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, network_course.class);
-                startActivity(intent);
-
-            }
-        });
+        db = FirebaseDatabase.getInstance().getReference();
         //Bottom Click Listener
+
+        AdminUid admin = new AdminUid();
+
+        if(admin.adminUid.equals(current_user_id)){
+            binding.addCategoryBtn.setVisibility(View.VISIBLE);
+        }
 
         mainbottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -132,7 +91,7 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
                         return true;
 
                     case R.id.bottom_code:
-                        Intent code = new Intent(MainActivity.this, SetupActivity.class);
+                        Intent code = new Intent(MainActivity.this, Compiler.class);
                         startActivity(code);
                         return true;
 
@@ -155,21 +114,40 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
         ArrayList<CategoryModel> categories = new ArrayList<>();
         CategoryAdapter adapter = new CategoryAdapter(this, categories);
 
-        database.collection("Categories").addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+
+
+        db.child("category").orderByChild("categoryId").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 categories.clear();
-                for (DocumentSnapshot snapshot : value.getDocuments()) {
-                    CategoryModel model = snapshot.toObject((CategoryModel.class));
-                    model.setCategoryId((snapshot.getId()));
-                    categories.add(model);
+                for (DataSnapshot data : snapshot.getChildren()) {
+
+//                    // Check if data exists for this category node
+                    if (data.exists()) {
+                        CategoryModel model = data.getValue(CategoryModel.class);
+                        if (model != null) {
+                            // Add your CategoryModel object to categories list or perform other operations
+                            categories.add(model);
+                        } else {
+                            Log.d("mytag", "Category model is null");
+                        }
+                    } else {
+                        Log.d("mytag", "No data exists for this category node");
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("mytag", "Database error occurred: " + error.getMessage());
+            }
         });
 
-//        binding.categoryList.setLayoutManager(new GridLayoutManager(this, 2));
-//        binding.categoryList.setAdapter(adapter);
+
+        binding.categoryList.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.categoryList.setAdapter(adapter);
 
         //Navigation
         navigationView.bringToFront();
@@ -183,11 +161,24 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.bringToFront();
-        //by default home will be checked
-        navigationView.setCheckedItem(R.id.nav_home);
+
+
+
+
+        binding.addCategoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this,AddCategoryButton.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
+
+
+
 
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -216,26 +207,30 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
             case R.id.share:
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
-                String body = "Download this App";
+                String body = "Download K G S Tech App \nhttps://drive.google.com/file/d/1KZMMMJqSXynxuUSkXIErg9Th1CO7kWaB/view?usp=drive_link";
                 share.putExtra(Intent.EXTRA_TEXT,body);
                 startActivity(Intent.createChooser(share,"Share Using"));
                 break;
             case R.id.feedback:
                 Toast.makeText(this, "Give Feedback", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, FeedbackActivity.class);
+                startActivity(intent);
                 break;
             case R.id.help:
                 Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this, AboutUs.class);
+                startActivity(i);
                 break;
             case R.id.nav_profile:
                 Intent setupIntent = new Intent(this, SetupActivity.class);
                 startActivity(setupIntent);
                 break;
-
-
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
     private void logout() {
 
@@ -259,22 +254,25 @@ public class  MainActivity extends AppCompatActivity implements NavigationView.O
             sendToLogin();
         } else {
             current_user_id = mAuth.getCurrentUser().getUid();
-            database.collection("Users").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//            database.collection("Users").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//
+//                    if (task.isSuccessful()) {
+//                        if (!task.getResult().exists()) {
+//                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
+//                            startActivity(setupIntent);
+//                            finish();
+//                        }
+//                    } else {
+//                        String e = task.getException().getMessage();
+//                        Toast.makeText(MainActivity.this, "Error" + e, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
 
-                    if (task.isSuccessful()) {
-                        if (!task.getResult().exists()) {
-                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
-                            startActivity(setupIntent);
-                            finish();
-                        }
-                    } else {
-                        String e = task.getException().getMessage();
-                        Toast.makeText(MainActivity.this, "Error" + e, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            db.child("users");
+
         }
     }
 }

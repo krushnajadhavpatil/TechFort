@@ -7,17 +7,15 @@
         android:id="@+id/bottom_learn"
         android:title="Learn" />
     <item
-        android:icon="@drawable/wquiz"
-        android:id="@+id/bottom_wq"
-        android:title="Weekly Quiz" />
-
+        android:icon="@drawable/code"
+        android:id="@+id/bottom_code"
+        android:title="Code" />
     <item
-        android:icon="@drawable/videos"
+        android:icon="@drawable/video_icon"
         android:id="@+id/bottom_discuss"
         android:title="Videos" />
     <item
-        android:icon="@drawable/code"
-        android:id="@+id/bottom_code"
-        android:title="Profile" />
-
+        android:icon="@drawable/wquiz"
+        android:id="@+id/bottom_wq"
+        android:title="Weekly Quiz" />
 </menu>

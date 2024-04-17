@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,11 +23,17 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.techfort.Model.User;
 import com.example.techfort.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -46,12 +53,15 @@ public class SetupActivity extends AppCompatActivity {
     private Uri mainImageURI = null;
     private EditText setupName;
     private Button setupBtn;
+    EditText edit;
     private String user_id;
     private Boolean isChanged = false;
 
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+
+    private DatabaseReference database;
     private ProgressBar setupProgress;
 
     @Override
@@ -70,49 +80,52 @@ public class SetupActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         user_id = firebaseAuth.getCurrentUser().getUid();
 
+        database = FirebaseDatabase.getInstance().getReference();
+
         setupImage = findViewById(R.id.setup_image);
         setupName = findViewById(R.id.setup_name);
         setupBtn = findViewById(R.id.setup_btn);
         setupProgress = findViewById(R.id.setup_progress);
+        edit = findViewById(R.id.phone);
+
+
 
         setupProgress.setVisibility(View.VISIBLE);
-        setupBtn.setEnabled(false);
 
-        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+
+        database.child("user").child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
 
-                if (task.isSuccessful()) {
+                    User user = snapshot.getValue(User.class);
+                    String image = user.getImage();
+                    String name = user.getName();
 
-                    if (task.getResult().exists()) {
-//                      Toast.makeText(SetupActivity.this, "Data Exists" , Toast.LENGTH_SHORT).show();
+                    mainImageURI = Uri.parse(image);
 
-                        String name = task.getResult().getString("name");
-                        String image = task.getResult().getString("image");
+                    setupName.setText(name);
 
-                        mainImageURI = Uri.parse(image);
-
-                        setupName.setText(name);
-
-                        RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.default_image);
-                        Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(setupImage);
-
-                    }
-
-                } else {
-                    String e = task.getException().getMessage();
-                    Toast.makeText(SetupActivity.this, "FireStore Error" + e, Toast.LENGTH_SHORT).show();
+                    RequestOptions placeholderRequest = new RequestOptions();
+                    placeholderRequest.placeholder(R.drawable.default_image);
+                    Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(setupImage);
                 }
-                setupProgress.setVisibility(View.INVISIBLE);
-                setupBtn.setEnabled(true);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("mytag", "onCancelled: "+error );
             }
         });
 
         setupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.d("mytag", "onClick: "+mainImageURI);
                 final String user_name = setupName.getText().toString();
+
                 if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
 
                     setupProgress.setVisibility(View.VISIBLE);
@@ -149,6 +162,7 @@ public class SetupActivity extends AppCompatActivity {
                         });
                     } else {
                         storeFirestore(null, user_name);
+                        Log.d("mytag", "onClick: ");
                     }
                 }
             }
@@ -183,14 +197,13 @@ public class SetupActivity extends AppCompatActivity {
             downloadUrl = mainImageURI;
         }
 
-        Map<String, String> userMap = new HashMap<>();
-        userMap.put("name", user_name);
-        userMap.put("image", downloadUrl.toString());
 
-        firebaseFirestore.collection("Users").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        User user = new User(user_name,downloadUrl.toString(),edit.getText().toString());
+
+        database.child("user").child(user_id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-
                 if (task.isSuccessful()) {
                     Toast.makeText(SetupActivity.this, "The user data are updated", Toast.LENGTH_SHORT).show();
                     Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
@@ -198,11 +211,12 @@ public class SetupActivity extends AppCompatActivity {
                     finish();
                 } else {
                     String e = task.getException().getMessage();
-                    Toast.makeText(SetupActivity.this, "FireStore Error" + e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetupActivity.this, "Firebase Error" + e, Toast.LENGTH_SHORT).show();
                 }
                 setupProgress.setVisibility(View.INVISIBLE);
             }
         });
+
     }
 
     private void ImagePicker() {
@@ -216,13 +230,14 @@ public class SetupActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 mainImageURI = result.getUri();
                 setupImage.setImageURI((mainImageURI));
-
                 isChanged = true;
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }

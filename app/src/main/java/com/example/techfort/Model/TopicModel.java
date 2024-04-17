@@ -8,6 +8,11 @@ public class TopicModel {
     public TopicModel() {
     }
 
+    public TopicModel(String topicName, String topicId) {
+        this.topicName = topicName;
+        this.topicId = topicId;
+    }
+
     public TopicModel(String topicName, String topicId, String topicUrl) {
         this.topicName = topicName;
         this.topicId = topicId;

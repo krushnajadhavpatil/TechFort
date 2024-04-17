@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.techfort.Activity.QuizActivity;
+import com.example.techfort.Model.Question;
 import com.example.techfort.Model.WeeklyQuizModel;
 import com.example.techfort.R;
 
@@ -43,6 +44,7 @@ public class WeeklyQuizAdapter extends RecyclerView.Adapter<WeeklyQuizAdapter.We
             public void onClick(View v) {
                 Intent intent = new Intent(context, QuizActivity.class);
                 intent.putExtra("wqCatId", model.getWeeklyQuizCategoryId());
+                intent.putExtra("category",holder.textView.getText().toString());
                 context.startActivity(intent);
             }
         });

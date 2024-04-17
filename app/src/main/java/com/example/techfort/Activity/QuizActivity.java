@@ -5,16 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.techfort.Api.AdminUid;
 import com.example.techfort.Model.Question;
 import com.example.techfort.R;
 import com.example.techfort.databinding.ActivityQuizBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,7 +40,8 @@ public class QuizActivity extends AppCompatActivity {
     int index = 0;
     Question question;
     CountDownTimer timer;
-    FirebaseFirestore database;
+//    FirebaseFirestore database;
+    DatabaseReference database;
     int correctAnswers = 0;
 
     @Override
@@ -40,45 +50,30 @@ public class QuizActivity extends AppCompatActivity {
         binding = ActivityQuizBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         //Status Bar Color
         getWindow().setStatusBarColor(ContextCompat.getColor(QuizActivity.this,R.color.color_white));
 
         questions = new ArrayList<>();
-        database = FirebaseFirestore.getInstance();
+//        database = FirebaseFirestore.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
 
-        final String catId = getIntent().getStringExtra("wqCatId");
 
-        Random random = new Random();
-        final int rand = random.nextInt(12);
+        String category = getIntent().getStringExtra("category");
 
-        database.collection("weeklyquiz")
-                .document(catId)
-                .collection("questions")
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        database.child("weeklyQuestions").child(category).orderByChild("weeklyQuizCategoryId").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if(queryDocumentSnapshots.getDocuments().size() < 5) {
-                    database.collection("weeklyquiz")
-                            .document(catId)
-                            .collection("questions")
-                            .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                Question question = snapshot.toObject(Question.class);
-                                questions.add(question);
-                            }
-                            setNextQuestion();
-                        }
-                    });
-                } else {
-                    for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                        Question question = snapshot.toObject(Question.class);
-                        questions.add(question);
-                    }
-                    setNextQuestion();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot data:snapshot.getChildren()){
+                    Question q = data.getValue(Question.class);
+                    questions.add(q);
                 }
+                setNextQuestion();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
         resetTimer();
@@ -161,13 +156,23 @@ public class QuizActivity extends AppCompatActivity {
                 if(timer!=null)
                     timer.cancel();
                 TextView selected = (TextView) view;
+                binding.option1.setEnabled(false);
+                binding.option2.setEnabled(false);
+                binding.option3.setEnabled(false);
+                binding.option4.setEnabled(false);
+
+
                 checkAnswer(selected);
 
                 break;
             case R.id.nextBtn:
                 reset();
-                if(index <= questions.size()) {
-                    index++;
+                index++;
+                binding.option1.setEnabled(true);
+                binding.option2.setEnabled(true);
+                binding.option3.setEnabled(true);
+                binding.option4.setEnabled(true);
+                if(index < questions.size()) {
                     setNextQuestion();
                 } else {
                     Intent intent = new Intent(QuizActivity.this, ResultActivity.class);

@@ -60,44 +60,46 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (model.getCategoryName().equals("Web Development")) {
-                    catId = model.getCategoryId();
-                    Intent intent = new Intent(context, WebDevActivity.class);
-                    intent.putExtra("catId", model.getCategoryId());
-                    intent.putExtra("categoryName", model.getCategoryName());
-                    intent.putExtra("categoryImage", model.getCategoryImage());
-                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else if (model.getCategoryName().equals("Programming Languages")) {
-                    catId = model.getCategoryId();
-                    Intent intent = new Intent(context, ProgrammingActivity.class);
-                    intent.putExtra("catId", model.getCategoryId());
-                    intent.putExtra("categoryName", model.getCategoryName());
-                    intent.putExtra("categoryImage", model.getCategoryImage());
-                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else if (model.getCategoryName().equals("Coding Area")) {
-                    Intent intent = new Intent(context, Compiler.class);
-                    intent.putExtra("catId", model.getCategoryId());
-                    intent.putExtra("categoryName", model.getCategoryName());
-                    intent.putExtra("categoryImage", model.getCategoryImage());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else if (model.getCategoryName().equals("CheetSheets")) {
-                    Intent intent = new Intent(context, CourseMaterial.class);
-                    intent.putExtra("catId", model.getCategoryId());
-                    intent.putExtra("categoryName", model.getCategoryName());
-                    intent.putExtra("categoryImage", model.getCategoryImage());
-                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else if (model.getCategoryName().equals("Interview Questions")) {
-                    Intent intent = new Intent(context, InterviewTopicActivity.class);
-                    intent.putExtra("catId", model.getCategoryId());
-                    intent.putExtra("categoryName", model.getCategoryName());
-                    intent.putExtra("categoryImage", model.getCategoryImage());
-                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } else {
+//                if (model.getCategoryName().equals("Cyber Security")) {
+//                    catId = model.getCategoryId();
+//
+//                    Intent intent = new Intent(context, WebDevActivity.class);
+//                    intent.putExtra("catId", model.getCategoryId());
+//                    intent.putExtra("categoryName", model.getCategoryName());
+//                    intent.putExtra("categoryImage", model.getCategoryImage());
+//                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+//
+//                } else if (model.getCategoryName().equals("Programming Languages")) {
+//                    catId = model.getCategoryId();
+//                    Intent intent = new Intent(context, ProgrammingActivity.class);
+//                    intent.putExtra("catId", model.getCategoryId());
+//                    intent.putExtra("categoryName", model.getCategoryName());
+//                    intent.putExtra("categoryImage", model.getCategoryImage());
+//                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+//                } else if (model.getCategoryName().equals("Coding Area")) {
+//                    Intent intent = new Intent(context, Compiler.class);
+//                    intent.putExtra("catId", model.getCategoryId());
+//                    intent.putExtra("categoryName", model.getCategoryName());
+//                    intent.putExtra("categoryImage", model.getCategoryImage());
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+//                } else if (model.getCategoryName().equals("CheetSheets")) {
+//                    Intent intent = new Intent(context, CourseMaterial.class);
+//                    intent.putExtra("catId", model.getCategoryId());
+//                    intent.putExtra("categoryName", model.getCategoryName());
+//                    intent.putExtra("categoryImage", model.getCategoryImage());
+//                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+//                } else if (model.getCategoryName().equals("Interview Questions")) {
+//                    Intent intent = new Intent(context, InterviewTopicActivity.class);
+//                    intent.putExtra("catId", model.getCategoryId());
+//                    intent.putExtra("categoryName", model.getCategoryName());
+//                    intent.putExtra("categoryImage", model.getCategoryImage());
+//                    intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+//                } else {
                     catId = model.getCategoryId();
                     Intent intent = new Intent(context, TopicActivity.class);
                     intent.putExtra("catId", model.getCategoryId());
@@ -105,7 +107,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     intent.putExtra("categoryImage", model.getCategoryImage());
                     intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
-                }
+//                }
             }
         });
     }

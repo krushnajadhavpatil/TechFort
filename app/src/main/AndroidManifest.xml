@@ -9,44 +9,33 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/applogo2"
-        android:label="Hackers Academy"
+        android:label="@string/app_name"
         android:roundIcon="@drawable/applogo2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.FullScreen">
         <activity
-            android:name=".Activity.ethichapter_third"
-            android:exported="false"
-            android:label="@string/title_activity_ethichapter_third"
-            android:theme="@style/AppTheme.FullScreen" />
-        <activity
-            android:name=".Activity.ethichapter_second"
+            android:name=".Activity.AboutUs"
             android:exported="false" />
         <activity
-            android:name=".Activity.ethichapter_first"
+            android:name=".Activity.FeedbackActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.network_course"
+            android:name=".Activity.AddCategoryButton"
             android:exported="false" />
         <activity
-            android:name=".Activity.Network_course"
+            android:name=".Activity.AddQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.Informationsecurity_course"
+            android:name=".Activity.VideoActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.cyber_course"
+            android:name=".Activity.VideoName"
             android:exported="false" />
         <activity
-            android:name=".Activity.pythonhack_course"
+            android:name=".Activity.NewContentActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.kalilinux_course"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.eithicalhack_course"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.ethical"
+            android:name=".Activity.NewTopicActivity"
             android:exported="false" />
         <activity android:name=".Activity.ProgQuizActivity" />
         <activity android:name=".Activity.TopicQuizResult" />

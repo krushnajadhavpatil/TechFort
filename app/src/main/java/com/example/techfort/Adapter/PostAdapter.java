@@ -1,13 +1,20 @@
 package com.example.techfort.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.techfort.Activity.CommentActivity;
+import com.example.techfort.Activity.DiscussActivity;
+import com.example.techfort.Activity.VideoActivity;
+import com.example.techfort.Activity.VideoName;
 import com.example.techfort.Model.Post;
 import com.example.techfort.Model.User;
+import com.example.techfort.Model.VideoModel;
 import com.example.techfort.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,16 +50,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<com.example.techfort.Adapter.PostAdapter.ViewHolder> {
 
-    public List<Post> list;
+    public List<VideoModel> list;
     public List<User> user_list;
     Context context;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
 
-    public PostAdapter(Context context, List<Post> list, List<User> user_list) {
+    public PostAdapter(Context context, List<VideoModel> list) {
         this.list = list;
-        this.user_list = user_list;
         this.context = context;
     }
 
@@ -64,133 +74,27 @@ public class PostAdapter extends RecyclerView.Adapter<com.example.techfort.Adapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.setIsRecyclable(false);
+//        holder.setIsRecyclable(false);
 
-        Post model = list.get(position);
-        holder.descView.setText(model.getDescription());
-        holder.questionView.setText(model.getQuestion());
-        holder.tagView.setText(model.getTag());
+        VideoModel model = list.get(position);
+        holder.textView.setText(model.getName());
 
-        String postId = list.get(position).PostId;
-        String currentUserId = firebaseAuth.getCurrentUser().getUid();
-        String post_user_id = list.get(position).getUser_id();
-
-        //Delete Post
-        if (post_user_id.equals(currentUserId)) {
-
-            holder.postDeleteBtn.setEnabled(true);
-            holder.postDeleteBtn.setVisibility(View.VISIBLE);
-
-        }
-
-        //User Data will be update here
-
-        String userName = user_list.get(position).getName();
-        String userImage = user_list.get(position).getImage();
-
-        holder.setUserData(userName, userImage);
-
-
-        //Getting timestamp
-        SimpleDateFormat spf = new SimpleDateFormat("MMM dd, yyyy");
-        String date = spf.format(list.get(position).getTimestamp());
-        holder.setTime(date);
-
-        //Get Likes Count
-        firebaseFirestore.collection("Posts").document(postId).collection("Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
+            public void onClick(View view) {
 
-                if (!documentSnapshots.isEmpty()) {
-
-                    int count = documentSnapshots.size();
-
-                    holder.updateLikesCount(count);
-                } else {
-                    holder.updateLikesCount(0);
-                }
+                Intent intent = new Intent(context, VideoActivity.class);
+                intent.putExtra("uri",model.getUrl());
+                context.startActivity(intent);
 
             }
         });
 
-        //Get Comment Count
-        firebaseFirestore.collection("Posts").document(postId).collection("Comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                if (!documentSnapshots.isEmpty()) {
 
-                    int count = documentSnapshots.size();
-
-                    holder.updateCommentCount(count);
-                } else {
-                    holder.updateCommentCount(0);
-                }
-
-            }
-        });
-
-        //Change Color of Like Button
-        firebaseFirestore.collection("Posts").document(postId).collection("Likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-
-                if (documentSnapshot.exists()) {
-                    holder.postLikeBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.upvoteaccent));
-                } else {
-                    holder.postLikeBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.upvote));
-                }
-
-            }
-        });
-        //Likes feature
-        holder.postLikeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                firebaseFirestore.collection("Posts").document(postId).collection("Likes").document(currentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (!task.getResult().exists()) {
-                            Map<String, Object> likesMap = new HashMap<>();
-                            likesMap.put("timestamp", FieldValue.serverTimestamp());
-                            firebaseFirestore.collection("Posts").document(postId).collection("Likes").document(currentUserId).set(likesMap);
-                        } else {
-                            firebaseFirestore.collection("Posts").document(postId).collection("Likes").document(currentUserId).delete();
-                        }
-                    }
-                });
-            }
-        });
-
-        //Comment Page Intent
-        holder.postCommentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                context.startActivity(new Intent(context, CommentActivity.class));
-                Intent commentIntent = new Intent(context, CommentActivity.class);
-                commentIntent.putExtra("post_id", postId);
-                context.startActivity(commentIntent);
-
-            }
-        });
-
-        //Delete Post
-        holder.postDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                firebaseFirestore.collection("Posts").document(postId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        list.remove(position);
-                        user_list.remove(position);
-
-                    }
-                });
-            }
-        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -199,57 +103,19 @@ public class PostAdapter extends RecyclerView.Adapter<com.example.techfort.Adapt
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView descView;
-        private final TextView questionView;
-        private final TextView tagView;
-        private TextView postDate;
-        private TextView postUserName;
-        private TextView postLikeCount;
-        private TextView postCommentCount;
-
-        private CircleImageView postUserImage;
-        private final ImageView postLikeBtn;
-        private final ImageView postCommentBtn;
-        private final Button postDeleteBtn;
+        VideoView view;
+        ImageView img;
+        TextView textView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            descView = itemView.findViewById(R.id.desc);
-            questionView = itemView.findViewById(R.id.question);
-            tagView = itemView.findViewById(R.id.tag);
-            postLikeBtn = itemView.findViewById(R.id.post_like_btn);
-            postCommentBtn = itemView.findViewById(R.id.post_comment_icon);
-            postDeleteBtn = itemView.findViewById(R.id.post_delete_btn);
+            view = itemView.findViewById(R.id.videoView);
+            textView=itemView.findViewById(R.id.Videoname);
+            img=itemView.findViewById(R.id.thumbnail);
+
 
         }
 
-        public void setTime(String date) {
-
-            postDate = itemView.findViewById(R.id.date);
-            postDate.setText(date);
-
-        }
-
-        public void setUserData(String name, String image) {
-            postUserName = itemView.findViewById(R.id.user_name);
-            postUserImage = itemView.findViewById(R.id.user_image);
-
-            postUserName.setText(name);
-            RequestOptions placeholderRequest = new RequestOptions();
-            placeholderRequest.placeholder(R.drawable.default_image);
-            Glide.with(context).applyDefaultRequestOptions(placeholderRequest).load(image).into(postUserImage);
-
-        }
-
-        public void updateLikesCount(int count) {
-            postLikeCount = itemView.findViewById(R.id.post_like_count);
-            postLikeCount.setText("+" + count + " Upvote");
-        }
-
-        public void updateCommentCount(int count) {
-            postCommentCount = itemView.findViewById(R.id.post_comment_count);
-            postCommentCount.setText("+" + count + " Comments");
-        }
     }
 }

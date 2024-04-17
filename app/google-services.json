@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "495273010149",
-    "project_id": "techfort-38e51",
-    "storage_bucket": "techfort-38e51.appspot.com"
+    "project_number": "447353238235",
+    "firebase_url": "https://tech-fort-new-default-rtdb.firebaseio.com",
+    "project_id": "tech-fort-new",
+    "storage_bucket": "tech-fort-new.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:495273010149:android:29441274546206bf0a450c",
+        "mobilesdk_app_id": "1:447353238235:android:b1dd94b6226ba588f312fe",
         "android_client_info": {
           "package_name": "com.example.techfort"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA3_ypstmM04zSCkcYRekGKG09UYt9L8Go"
+          "current_key": "AIzaSyCHxUym9pPAOTeVAedaN3yZwsGpGO-iriw"
         }
       ],
       "services": {

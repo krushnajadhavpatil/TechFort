@@ -11,7 +11,9 @@ public class WeeklyQuizModel {
         this.weeklyQuizCategoryId = weeklyQuizCategoryId;
         this.weeklyQuizCategoryName = weeklyQuizCategoryName;
     }
-
+    public WeeklyQuizModel( String weeklyQuizCategoryName) {
+        this.weeklyQuizCategoryName = weeklyQuizCategoryName;
+    }
     public String getWeeklyQuizCategoryId() {
         return weeklyQuizCategoryId;
     }

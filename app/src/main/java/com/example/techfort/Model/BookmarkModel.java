@@ -6,14 +6,29 @@ public class BookmarkModel extends BookmarkId {
     String topicName;
     String topicUrl;
     String user_id;
+    String category;
     public BookmarkModel() {
     }
 
-    public BookmarkModel(String topicId, String topicName, String topicUrl, String user_id) {
+//    public BookmarkModel(String topicId, String topicName, String topicUrl, String user_id) {
+//        this.topicId = topicId;
+//        this.topicName = topicName;
+//        this.topicUrl = topicUrl;
+//        this.user_id = user_id;
+//    }
+    public BookmarkModel(String topicId, String topicName, String user_id,String category) {
         this.topicId = topicId;
         this.topicName = topicName;
-        this.topicUrl = topicUrl;
         this.user_id = user_id;
+        this.category=category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getTopicId() {

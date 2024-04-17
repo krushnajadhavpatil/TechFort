@@ -1,6 +1,7 @@
 package com.example.techfort.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,11 @@ import com.example.techfort.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -34,6 +40,8 @@ public class BookmarkActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
+    DatabaseReference database ;
+
     private String current_user_id;
 
     @Override
@@ -47,6 +55,7 @@ public class BookmarkActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         current_user_id = firebaseAuth.getCurrentUser().getUid();
+        database = FirebaseDatabase.getInstance().getReference();
 
         BookmarkAdapter adapter = new BookmarkAdapter(bookmarkList, this);
 
@@ -60,44 +69,25 @@ public class BookmarkActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(BookmarkActivity.this,R.color.color_white));
 
         if (firebaseAuth.getCurrentUser() != null) {
-//            firebaseFirestore.collection("Bookmark")
-//                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                            bookmarkList.clear();
-//                            for (DocumentSnapshot snapshot : value.getDocuments()) {
-//                                BookmarkModel model = snapshot.toObject((BookmarkModel.class));
-//                                model.setTopicId(snapshot.getId());
-//                                bookmarkList.add(model);
-//                            }
-//                            adapter.notifyDataSetChanged();
-//                        }
-//                    });
-            firebaseFirestore.collection("Bookmark").addSnapshotListener(BookmarkActivity.this, new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
-                    for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-                            String bookmarkId = doc.getDocument().getId();
-                            BookmarkModel model = doc.getDocument().toObject(BookmarkModel.class).withId(bookmarkId);
-                            String bookmarkUserId = doc.getDocument().getString("user_id");
-                            if (current_user_id.equals(bookmarkUserId)) {
-                                firebaseFirestore.collection("Bookmark").document(bookmarkUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-//                                        BookmarkModel model = task.getResult().toObject(BookmarkModel.class);
-                                            bookmarkList.add(model);
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    }
 
-                                });
-                            }
-                        }
+            database.child("bookmark").child(current_user_id).orderByChild("topicName").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    bookmarkList.clear();
+                    for(DataSnapshot data:snapshot.getChildren()){
+                        Log.d("mytag", "Bookark: "+data);
+                        BookmarkModel model = data.getValue(BookmarkModel.class);
+                        bookmarkList.add(model);
                     }
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
                 }
             });
+
         }
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.setAdapter(adapter);

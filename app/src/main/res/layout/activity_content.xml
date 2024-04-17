@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:background="@drawable/background"
         android:orientation="horizontal"
         android:gravity="center"
@@ -20,10 +20,10 @@
         <TextView
             android:id="@+id/topicName"
             android:layout_width="0dp"
-            android:layout_weight="8"
             android:layout_height="wrap_content"
+            android:layout_weight="8"
             android:background="@drawable/background"
-            android:gravity="center"
+            android:gravity="start"
             android:text="Topic Name"
             android:textAllCaps="true"
             android:textColor="@color/white"
@@ -60,21 +60,31 @@
         app:layout_constraintVertical_bias="0.0">
 
 
-        <com.github.barteksc.pdfviewer.PDFView
-            android:id="@+id/pdfView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+<!--        <com.github.barteksc.pdfviewer.PDFView-->
+<!--            android:id="@+id/pdfView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="11" />-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contentRecycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="11" />
 
-        <Button
-            android:id="@+id/quiz_btn"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/background"
-            android:text="Quiz"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
+        <ImageButton
+            android:id="@+id/add_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"
+            android:background="@drawable/circular_bg"
+            android:src="@drawable/add"
+            android:visibility="gone"
+            />
+
+
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

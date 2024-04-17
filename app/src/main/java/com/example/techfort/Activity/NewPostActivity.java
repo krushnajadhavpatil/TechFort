@@ -19,6 +19,11 @@ import com.example.techfort.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -44,6 +49,8 @@ public class NewPostActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
 
+    DatabaseReference database;
+
     private String current_user_id;
 
     @Override
@@ -57,6 +64,7 @@ public class NewPostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
 
         firebaseAuth = FirebaseAuth.getInstance();
         current_user_id = firebaseAuth.getCurrentUser().getUid();
@@ -68,14 +76,25 @@ public class NewPostActivity extends AppCompatActivity {
         newPostProgress = findViewById(R.id.new_post_progress);
 
         //Get count of documents in database
-        firebaseFirestore.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//        firebaseFirestore.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                if (!documentSnapshots.isEmpty()) {
+//                    countPost = documentSnapshots.size();
+//                } else {
+//                    countPost = 0;
+//                }
+//            }
+//        });
+
+        database.child("post").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (!documentSnapshots.isEmpty()) {
-                    countPost = documentSnapshots.size();
-                } else {
-                    countPost = 0;
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                countPost = snapshot.getChildrenCount();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 
@@ -100,12 +119,30 @@ public class NewPostActivity extends AppCompatActivity {
                     postMap.put("timestamp", System.currentTimeMillis());
                     postMap.put("count",countPost);
 
-                    firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                    firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentReference> task) {
+//
+//                            if (task.isSuccessful()) {
+//
+//                                Toast.makeText(NewPostActivity.this, "Post was Added", Toast.LENGTH_SHORT).show();
+//                                Intent mainIntent = new Intent(NewPostActivity.this, DiscussActivity.class);
+//                                startActivity(mainIntent);
+//                                finish();
+//
+//                            } else {
+//                                String e = task.getException().getMessage();
+//                                Toast.makeText(NewPostActivity.this, "Error" + e, Toast.LENGTH_SHORT).show();
+//                            }
+//                            newPostProgress.setVisibility(View.INVISIBLE);
+//
+//                        }
+//                    });
+                    database.child("post").push().setValue(postMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
-
+                        public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-
+//
                                 Toast.makeText(NewPostActivity.this, "Post was Added", Toast.LENGTH_SHORT).show();
                                 Intent mainIntent = new Intent(NewPostActivity.this, DiscussActivity.class);
                                 startActivity(mainIntent);
@@ -116,6 +153,8 @@ public class NewPostActivity extends AppCompatActivity {
                                 Toast.makeText(NewPostActivity.this, "Error" + e, Toast.LENGTH_SHORT).show();
                             }
                             newPostProgress.setVisibility(View.INVISIBLE);
+//
+
                         }
                     });
 

@@ -21,6 +21,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     Context context;
     ArrayList<TopicModel> topicModel;
     private static String topicId;
+    public  String category;
 
     //Sending cat id without intent
     public static String getTopicId() {
@@ -55,7 +56,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
                 Intent intent = new Intent(context, Content.class);
                 intent.putExtra("topicId",model.getTopicId());
                 intent.putExtra("topicName",model.getTopicName());
-                intent.putExtra("topicUrl",model.getTopicUrl());
+                intent.putExtra("category",category);
                 context.startActivity(intent);
             }
         });
@@ -63,6 +64,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
 
     @Override
     public int getItemCount() {
+
         return topicModel.size();
     }
 
